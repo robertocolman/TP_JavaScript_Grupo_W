@@ -11,7 +11,7 @@ Este Trabajo Práctico consiste en el desarrollo de un módulo de **Node.js** qu
 ### Integrantes - Grupo "W"
 * Colman, Roberto
 * Valenzuela, Nahuel
-* [Apellido, Nombre]
+* Plaza, Leandro
 * [Apellido, Nombre]
 * [Apellido, Nombre]
 * [Apellido, Nombre]
