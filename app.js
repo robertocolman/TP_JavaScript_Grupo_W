@@ -1,54 +1,67 @@
 import fs from 'node:fs/promises';
 
-async function obtenerPersonajes() {
-    try {
-        const respuesta = await fetch('https://thronesapi.com/api/v2/Characters');
-        const personajes = await respuesta.json();
+const API_URL = 'https://thronesapi.com/api/v2/Characters';
 
+//1.a) Taemos todos los personajer de la API mediante GET y d)) Persistimos los datos obtenidos en un archivo personajes.json
+
+async function obtenerYPersistirPersonajes() {
+    try {
+        const respuesta = await fetch(API_URL);
+        if (!respuesta.ok) throw new Error("Fallo en la conexión con la API");
+        
+        const personajes = await respuesta.json();
+        
+        // Guardamos los datos crudos para cumplir con la persistencia inicial 
         await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
-        console.log("✅ Datos guardados en personajes.json");
+        console.log("Punto 1.a y 1.d: Datos recuperados y guardados en personajes.json");
         return personajes;
     } catch (error) {
-        console.error("Error al obtener personajes:", error.message);
-    }
+        console.error("Error en punto 1.a/d:", error.message); 
+    }    
 }
 
-async function manipularPersonajes() {
+//1.b) Agregado de un nuevo personaje mediante POST.
+
+async function agregarNuevoPersonajeAPI(nuevoPersonaje) {
     try {
-        const contenido = await fs.readFile('personajes.json', 'utf-8');
-        let lista = JSON.parse(contenido);
-
-        lista.push({ id: 999, fullName: "Nacho Novello", title: "Profesor" });
-
-        lista.unshift(
-            { id: 100, fullName: "Alguien 1" },
-            { id: 101, fullName: "Alguien 2" }
-        );
-
-        const eliminado = lista.shift();
-        console.log("🚫 Elemento eliminado:", eliminado);
-
-        const resumido = lista.map(p => ({ id: p.id, nombre: p.fullName }));
-        await fs.writeFile('resumen.json', JSON.stringify(resumido, null, 2));
-
-        resumido.sort((a, b) => b.nombre.localeCompare(a.nombre));
-        console.log("📉 Lista ordenada decreciente:", resumido);
-
+        const respuesta = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoPersonaje)
+        });
+        //await respuesta.json(); // No es necesario procesar la respuesta para este ejercicio ya que no podemos subir datos reales a la API
+        console.log("Punto 1.b: Peticion POST enviada con exito");
     } catch (error) {
-        console.error("Error manipulando el archivo:", error.message);
+        console.error("Error en punto 1.b:", error.message);
+    }
+ }
+
+ //1.c) Buscamos un personaje especifico con el ID (GET).
+
+async function buscarPersonajePorId(id) {
+    try {
+        const respuesta = await fetch(`${API_URL}/${id}`);
+        const personaje = await respuesta.json();
+        console.log(`Punto 1.c: Personaje encontrado (ID ${id}):`, personaje.fullName);
+    } catch (error) {
+        console.error("Error en punto 1.c:", error.message);
     }
 }
 
-async function ejecutarTP() {
-    await obtenerPersonajes();
-    await manipularPersonajes();
+// Ejecución:
+
+async function ejecutarTP(){
+    await obtenerYPersistirPersonajes();
+    const miPersonaje = {
+        firstName: "Lionel",
+        lastName: "Messi",
+        fullName: "Lionel Messi",
+        title: "Programador UNER"
+    };
+
+    await agregarNuevoPersonajeAPI(miPersonaje);
+
+    await buscarPersonajePorId(1); 
 }
 
 ejecutarTP();
-
-/**
- * TP JavaScript - Programación III
- * Grupo N°: W
- * Integrantes: Colman, Roberto
- *              Valenzuela, Nahuel    
- */
