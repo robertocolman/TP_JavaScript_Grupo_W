@@ -49,5 +49,6 @@ ejecutarTP();
 /**
  * TP JavaScript - Programación III
  * Grupo N°: W
- * Integrantes: Colman roberto...
+ * Integrantes: Colman, Roberto
+ *              Valenzuela, Nahuel    
  */
