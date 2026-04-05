@@ -528,5 +528,12 @@
     "family": "Bronn",
     "image": "bronn.jpg",
     "imageUrl": "https://thronesapi.com/assets/images/bronn.jpg"
+  },
+  {
+    "id": 999,
+    "firstName": "Diego",
+    "lastName": "Maradona",
+    "fullName": "Diego Maradona",
+    "title": "Programador UNER"
   }
 ]

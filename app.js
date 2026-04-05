@@ -48,20 +48,31 @@ async function buscarPersonajePorId(id) {
     }
 }
 
+// 2.a) Agregar un personaje al final del archivo personajes.json
+async function agregarPersonajeAlFinal(nuevoPersonaje) {
+    try {
+        const data = await fs.readFile('personajes.json', 'utf-8');
+        const personajes = JSON.parse(data);
+        personajes.push(nuevoPersonaje);
+        await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+        console.log('2.a) Personaje agregado al final:', nuevoPersonaje);
+    } catch (error) {
+        console.error('Error en 2.a:', error.message);
+    }
+}
+
 // Ejecución:
 
 async function ejecutarTP(){
     await obtenerYPersistirPersonajes();
-    const miPersonaje = {
-        firstName: "Lionel",
-        lastName: "Messi",
-        fullName: "Lionel Messi",
+    const personajeMaradona = {
+        id: 999,
+        firstName: "Diego",
+        lastName: "Maradona",
+        fullName: "Diego Maradona",
         title: "Programador UNER"
     };
-
-    await agregarNuevoPersonajeAPI(miPersonaje);
-
-    await buscarPersonajePorId(1); 
+    await agregarPersonajeAlFinal(personajeMaradona);
 }
 
 ejecutarTP();
