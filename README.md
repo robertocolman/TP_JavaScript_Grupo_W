@@ -12,7 +12,7 @@ Este Trabajo Práctico consiste en el desarrollo de un módulo de **Node.js** qu
 * Colman, Roberto
 * Valenzuela, Nahuel
 * Plaza, Leandro
-* [Apellido, Nombre]
+* Fabian Galindez, Raúl Fabricio
 * [Apellido, Nombre]
 * [Apellido, Nombre]
 
