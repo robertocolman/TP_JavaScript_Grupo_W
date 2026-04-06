@@ -74,5 +74,40 @@ async function ejecutarTP(){
     };
     await agregarPersonajeAlFinal(personajeMaradona);
 }
+// 2.b) Agregar dos personajes al inicio del archivo personajes.json
 
+async function agregarPersonajesAlInicio(nuevosPersonajes) {
+    try {
+       
+        const data = await fs.readFile('personajes.json', 'utf-8');
+        const personajes = JSON.parse(data);
+        nuevosPersonajes.forEach(p => personajes.unshift(p));
+        await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+        console.log('2.b) Personajes agregados al inicio correctamente.', nuevosPersonajes);
+    } catch (error) {
+        console.error('Error en punto 2.b:', error.message);
+    }
+}
+
+// Ejecucion 
+ {
+    const personajesParaInsertar = [
+        { 
+            id: 101, 
+            firstName: "Marcos", 
+            lastName: "Galperin", 
+            fullName: "Marcos Galperin", 
+            title: "Analista de Sistemas" 
+        },
+        { 
+            id: 102, 
+            firstName: "Gabriela", 
+            lastName: "Sanchéz", 
+            fullName: "Gabriela Sanchéz", 
+            title: "Programadora"
+        }
+    ];
+
+    await agregarPersonajesAlInicio(personajesParaInsertar);
+}
 ejecutarTP();
