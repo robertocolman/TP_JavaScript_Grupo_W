@@ -14,7 +14,7 @@ Este Trabajo Práctico consiste en el desarrollo de un módulo de **Node.js** qu
 * Plaza, Leandro
 * Fabian Galindez, Raúl Fabricio
 * Chávez, Roberto Esteban
-* [Apellido, Nombre]
+* Montenegro, Nicolás
 
 ---
 
