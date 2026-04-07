@@ -1,0 +1,151 @@
+import fs from 'node:fs/promises';
+
+const API_URL = 'https://thronesapi.com/api/v2/Characters';
+
+//1.a) Taemos todos los personajer de la API mediante GET y d)) Persistimos los datos obtenidos en un archivo personajes.json
+
+async function obtenerYPersistirPersonajes() {
+    try {
+        const respuesta = await fetch(API_URL);
+        if (!respuesta.ok) throw new Error("Fallo en la conexión con la API");
+        
+        const personajes = await respuesta.json();
+        
+        // Guardamos los datos crudos para cumplir con la persistencia inicial 
+        await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+        console.log("Punto 1.a y 1.d: Datos recuperados y guardados en personajes.json");
+        return personajes;
+    } catch (error) {
+        console.error("Error en punto 1.a/d:", error.message); 
+    }    
+}
+
+//1.b) Agregado de un nuevo personaje mediante POST.
+
+async function agregarNuevoPersonajeAPI(nuevoPersonaje) {
+    try {
+        const respuesta = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoPersonaje)
+        });
+        //await respuesta.json(); // No es necesario procesar la respuesta para este ejercicio ya que no podemos subir datos reales a la API
+        console.log("Punto 1.b: Peticion POST enviada con exito");
+    } catch (error) {
+        console.error("Error en punto 1.b:", error.message);
+    }
+}
+
+ //1.c) Buscamos un personaje especifico con el ID (GET).
+
+async function buscarPersonajePorId(id) {
+    try {
+        const respuesta = await fetch(`${API_URL}/${id}`);
+        const personaje = await respuesta.json();
+        console.log(`Punto 1.c: Personaje encontrado (ID ${id}):`, personaje.fullName);
+    } catch (error) {
+        console.error("Error en punto 1.c:", error.message);
+    }
+}
+
+// 2.a) Agregar un personaje al final del archivo personajes.json
+async function agregarPersonajeAlFinal(nuevoPersonaje) {
+    try {
+        const data = await fs.readFile('personajes.json', 'utf-8');
+        const personajes = JSON.parse(data);
+        personajes.push(nuevoPersonaje);
+        await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+        console.log('2.a) Personaje agregado al final:', nuevoPersonaje);
+    } catch (error) {
+        console.error('Error en 2.a:', error.message);
+    }
+}
+
+// Ejecución:
+
+async function ejecutarTP(){
+    await obtenerYPersistirPersonajes();
+    const personajeMaradona = {
+        id: 999,
+        firstName: "Diego",
+        lastName: "Maradona",
+        fullName: "Diego Maradona",
+        title: "Programador UNER"
+    };
+    await agregarPersonajeAlFinal(personajeMaradona);
+}
+// 2.b) Agregar dos personajes al inicio del archivo personajes.json
+
+async function agregarPersonajesAlInicio(nuevosPersonajes) {
+    try {
+        const data = await fs.readFile('personajes.json', 'utf-8');
+        const personajes = JSON.parse(data);
+        nuevosPersonajes.forEach(p => personajes.unshift(p));
+        await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+        console.log('2.b) Personajes agregados al inicio correctamente.', nuevosPersonajes);
+    } catch (error) {
+        console.error('Error en punto 2.b:', error.message);
+    }
+}
+
+// Ejecucion 
+{
+    const personajesParaInsertar = [
+        { 
+            id: 101, 
+            firstName: "Marcos", 
+            lastName: "Galperin", 
+            fullName: "Marcos Galperin", 
+            title: "Analista de Sistemas" 
+        },
+        { 
+            id: 102, 
+            firstName: "Gabriela", 
+            lastName: "Sanchéz", 
+            fullName: "Gabriela Sanchéz", 
+            title: "Programadora"
+        }
+    ];
+
+    await agregarPersonajesAlInicio(personajesParaInsertar);
+}
+
+// 2.c) Elimina el primero y luego lo muestra
+
+async function eliminarPrimerPersonaje() {
+    const data = await fs.readFile('personajes.json', 'utf-8');
+    const personajes = JSON.parse(data);
+
+    const eliminado = personajes.shift(); // elimina el primero
+
+    console.log("2.c) Eliminado:", eliminado);
+
+    await fs.writeFile('personajes.json', JSON.stringify(personajes, null, 2));
+}
+
+// 2.d) Crear archivo con id y nombre
+
+async function crearArchivoReducido() {
+    const data = await fs.readFile('personajes.json', 'utf-8');
+    const personajes = JSON.parse(data);
+
+    const reducido = personajes.map(p => ({
+        id: p.id,
+        nombre: p.fullName
+    }));
+
+    await fs.writeFile('personajes_reducido.json', JSON.stringify(reducido, null, 2));
+}
+
+// 2.e) Ordenar por nombre DESC
+
+async function ordenarYMostrar() {
+    const data = await fs.readFile('personajes_reducido.json', 'utf-8');
+    const personajes = JSON.parse(data);
+
+    personajes.sort((a, b) => b.nombre.localeCompare(a.nombre));
+
+    console.log("2.e) Ordenados desc:", personajes);
+}
+
+ejecutarTP();
