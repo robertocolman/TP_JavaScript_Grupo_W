@@ -1,5 +1,12 @@
 [
   {
+    "id": 101,
+    "firstName": "Marcos",
+    "lastName": "Galperin",
+    "fullName": "Marcos Galperin",
+    "title": "Analista de Sistemas"
+  },
+  {
     "id": 0,
     "firstName": "Daenerys",
     "lastName": "Targaryen",
